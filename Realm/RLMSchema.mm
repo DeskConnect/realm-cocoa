@@ -74,38 +74,13 @@ static NSMutableDictionary *s_localNameToClass;
     NSMutableArray *schemaArray = [NSMutableArray array];
     RLMSchema *schema = [[RLMSchema alloc] init];
 
-    unsigned int numClasses;
-    Class *classes = objc_copyClassList(&numClasses);
-
-    // first create class to name mapping so we can do array validation
-    // when creating object schema
     s_localNameToClass = [NSMutableDictionary dictionary];
-    for (unsigned int i = 0; i < numClasses; i++) {
-        Class cls = classes[i];
-        static Class objectBaseClass = [RLMObjectBase class];
-        if (!RLMIsKindOfClass(cls, objectBaseClass) || ![cls shouldPersistToRealm]) {
-            continue;
-        }
-
-        NSString *className = NSStringFromClass(cls);
-        if ([RLMSwiftSupport isSwiftClassName:className]) {
-            className = [RLMSwiftSupport demangleClassName:className];
-        }
-        // NSStringFromClass demangles the names for top-level Swift classes
-        // but not for nested classes. _T indicates it's a Swift symbol, t
-        // indicates it's a type, and C indicates it's a class.
-        else if ([className hasPrefix:@"_TtC"]) {
-            NSString *message = [NSString stringWithFormat:@"RLMObject subclasses cannot be nested within other declarations. Please move %@ to global scope.", className];
-            @throw RLMException(message);
-        }
-
-        if (s_localNameToClass[className]) {
-            NSString *message = [NSString stringWithFormat:@"RLMObject subclasses with the same name cannot be included twice in the same target. Please make sure '%@' is only linked once to your current target.", className];
-            @throw RLMException(message);
-        }
+    
+    // use hardcoded class names
+    NSArray *classNames = @[@"WFWorkflowInputClass", @"WFWorkflowType", @"WFWorkflow", @"WFWorkflowIcon"];
+    for (NSString *className in classNames) {
+        Class cls = NSClassFromString(className);
         s_localNameToClass[className] = cls;
-
-        // override classname for all valid classes
         RLMReplaceClassNameMethod(cls, className);
     }
 
@@ -120,7 +95,6 @@ static NSMutableDictionary *s_localNameToClass;
         // set standalone class on shared shema for standalone object creation
         schema.standaloneClass = RLMStandaloneAccessorClassForObjectClass(schema.objectClass, schema);
     }
-    free(classes);
 
     // set class array
     schema.objectSchema = schemaArray;
