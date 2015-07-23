@@ -77,11 +77,13 @@ static NSMutableDictionary *s_localNameToClass;
     s_localNameToClass = [NSMutableDictionary dictionary];
     
     // use hardcoded class names
-    NSArray *classNames = @[@"WFWorkflowInputClass", @"WFWorkflowType", @"WFWorkflow", @"WFWorkflowIcon"];
+    NSArray *classNames = @[@"WFWorkflowInputClass", @"WFWorkflowType", @"WFWorkflow", @"WFWorkflowIcon", @"WFWorkflowSyncToken"];
     for (NSString *className in classNames) {
         Class cls = NSClassFromString(className);
-        s_localNameToClass[className] = cls;
-        RLMReplaceClassNameMethod(cls, className);
+        if (cls) {
+            s_localNameToClass[className] = cls;
+            RLMReplaceClassNameMethod(cls, className);
+        }
     }
 
     // process all RLMObject subclasses
