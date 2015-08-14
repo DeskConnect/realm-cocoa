@@ -77,7 +77,7 @@ static NSMutableDictionary *s_localNameToClass;
     s_localNameToClass = [NSMutableDictionary dictionary];
     
     // use hardcoded class names
-    NSArray *classNames = @[@"WFWorkflowInputClass", @"WFWorkflowType", @"WFWorkflow", @"WFWorkflowIcon", @"WFWorkflowSyncToken"];
+    NSArray *classNames = @[@"WFWorkflowInputClass", @"WFWorkflowType", @"WFWorkflow", @"WFWorkflowIcon", @"WFWorkflowSyncToken", @"WFWorkflowQuarantine"];
     for (NSString *className in classNames) {
         Class cls = NSClassFromString(className);
         if (cls) {
