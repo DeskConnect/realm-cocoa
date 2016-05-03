@@ -13,6 +13,9 @@ x.x.x Release notes (yyyy-MM-dd)
 
 * Fix an assertion failure of "!more_before || index >= std::prev(it)->second)"
   in `IndexSet::do_add()`.
+* Fix `BETWEEN` queries that traverse `RLMArray`/`List` properties to ensure that
+  a single related object satisfies the `BETWEEN` criteria, rather than allowing
+  different objects in the array to satisfy the lower and upper bounds.
 
 0.100.0 Release notes (2016-04-29)
 =============================================================
